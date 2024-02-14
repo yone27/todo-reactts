@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Todos from "./components/Todos";
+import { TodoId, type Todo as TodoType } from "./types";
 
-function App() {
+const mockTodos = [
+  {
+    id: 1,
+    title: "Repasar betas de react",
+    completed: false,
+  },
+  {
+    id: 2,
+    title: "Aprender typescript",
+    completed: false,
+  },
+  {
+    id: 3,
+    title: "hacer ejericio hoy",
+    completed: false,
+  },
+];
+
+const App = () => {
+  const [todos, setTodos] = useState(mockTodos);
+
+  const handleRemove = ({ id }: TodoId) => {
+    let newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+  };
+
+  const handleCompleted = ({
+    id,
+    completed,
+  }: Pick<TodoType, "id" | "completed">) => {
+    let newTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, completed } : todo
+    );
+    setTodos(newTodos);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="todoapp">
+      <Todos
+        todos={todos}
+        onRemoveTodo={handleRemove}
+        onToggleCompleted={handleCompleted}
+      />
     </div>
   );
-}
+};
 
 export default App;
